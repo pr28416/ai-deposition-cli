@@ -33,4 +33,10 @@ class DepositionSearcher:
         )
 
     def search_all(self, text):
-        pass
+        res = self.vectorize_text(text)
+        # retrieve from Pinecone
+        xq = res['data'][0]['embedding']
+
+        # get relevant contexts (including the questions)
+        res = self.index.query(vector=xq, top_k=1, include_metadata=True)
+        return res 
