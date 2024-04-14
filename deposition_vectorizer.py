@@ -55,6 +55,7 @@ class DepositionVectorizer:
                     "end": seg["end"],
                     "video_path": video_path,
                     "text": seg["text"],
+                    "type": "video",
                 },
             }
             for i, seg in enumerate(segments)
