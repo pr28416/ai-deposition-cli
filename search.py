@@ -9,7 +9,7 @@ from whisper_func import VideoToTextModel
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.core import SimpleDirectoryReader
 import asyncio
-
+  
 class DepositionSearcher:
     def __init__(self, pinecone_index_name, pinecone_api_key, togetherai_api_key):
         self.pc = Pinecone(api_key=pinecone_api_key)
