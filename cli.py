@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from whisper_func import VideoToTextModel
 import sys
+from deposition_vectorizer import DepositionVectorizer
 
 load_dotenv()
 
@@ -28,6 +29,14 @@ class PDFSegment(BaseModel):
 class DataManager:
     videoSegments: list[VideoSegment]
     pdfs: list[str]
+
+
+vectorizer = DepositionVectorizer(
+    os.getenv("PINECONE_INDEX_NAME"),
+    os.getenv("PINECONE_API_KEY"),
+    os.getenv("TOGETHERAI_API_KEY"),
+)
+dataManager = DataManager()
 
 
 class Response(BaseModel):
@@ -101,16 +110,19 @@ def process_files_in_data():
 
         if file.endswith(".mp4"):
             print(" - Video file detected")
-            segments = videoModel.sentence_transcribe(f"{data_dir}/{file}")
-            video_path = f"{data_dir}/{file}"
-            for id, segment in enumerate(segments):
-                start = segment["start"]
-                end = segment["end"]
-                text = segment["text"]
-                video_segment = VideoSegment(
-                    id=id, start=start, end=end, text=text, video_path=video_path
-                )
-                DataManager.videoSegments.append(video_segment)
+
+            vectorizer.vectorize_and_upsert_video(f"{data_dir}/{file}")
+
+            # segments = videoModel.sentence_transcribe(f"{data_dir}/{file}")
+            # video_path = f"{data_dir}/{file}"
+            # for id, segment in enumerate(segments):
+            #     start = segment["start"]
+            #     end = segment["end"]
+            #     text = segment["text"]
+            #     video_segment = VideoSegment(
+            #         id=id, start=start, end=end, text=text, video_path=video_path
+            #     )
+            #     dataManager.videoSegments.append(video_segment)
 
     return True
 
