@@ -32,11 +32,30 @@ class DepositionSearcher:
             filter=filter,
         )
 
-    def search_all(self, text):
-        res = self.vectorize_text(text)
-        # retrieve from Pinecone
-        xq = res['data'][0]['embedding']
+    def query_all(self, text, top_k=5):
+        query_vector = self.vectorize_text(text)
+        return self.index.query(
+            vector=query_vector,
+            top_k=top_k,
+            include_values=False,
+            include_metadata=True,
+        )
 
-        # get relevant contexts (including the questions)
-        res = self.index.query(vector=xq, top_k=5, include_metadata=True)
-        return res 
+    def query_video(self, text, top_k=5):
+        query_vector = self.vectorize_text(text)
+        return self.index.query(
+            vector=query_vector,
+            top_k=top_k,
+            include_values=False,
+            include_metadata=True,
+            filter={"type": "video"},
+        )
+    def query_text(self, text, top_k=5):
+        query_vector = self.vectorize_text(text)
+        return self.index.query(
+            vector=query_vector,
+            top_k=top_k,
+            include_values=False,
+            include_metadata=True,
+            filter={"type": "text"},
+        )
