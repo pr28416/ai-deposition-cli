@@ -13,7 +13,7 @@ class VideoToTextModel:
     def raw_transcribe(self, video_path):
         return self.model.transcribe(video_path)
 
-    def sentence_transcribe(self, video_path, folder="data/"):
+    def sentence_transcribe(self, video_path, folder="data/clips/"):
         transcription = self.raw_transcribe(video_path)["segments"]
 
         intervals = [[]]
