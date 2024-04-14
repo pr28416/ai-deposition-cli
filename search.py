@@ -9,6 +9,9 @@ from whisper_func import VideoToTextModel
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.core import SimpleDirectoryReader
 import asyncio
+import os
+from dotenv import load_dotenv
+
   
 class DepositionSearcher:
     def __init__(self, pinecone_index_name, pinecone_api_key, togetherai_api_key):
@@ -59,3 +62,13 @@ class DepositionSearcher:
             include_metadata=True,
             filter={"type": "text"},
         )
+
+if __name__ == "__main__":
+    load_dotenv()
+    deposition_searcher = DepositionSearcher(
+        pinecone_index_name=os.getenv("PINECONE_INDEX_NAME"),
+        pinecone_api_key=os.getenv("PINECONE_API_KEY"),
+        togetherai_api_key=os.getenv("TOGETHERAI_API_KEY"),
+    )
+
+    print(deposition_searcher.query_all("Flexcar opened in January"))
