@@ -38,5 +38,5 @@ class DepositionSearcher:
         xq = res['data'][0]['embedding']
 
         # get relevant contexts (including the questions)
-        res = self.index.query(vector=xq, top_k=1, include_metadata=True)
+        res = self.index.query(vector=xq, top_k=5, include_metadata=True)
         return res 
